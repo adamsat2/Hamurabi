@@ -6,6 +6,7 @@ enum GameStep {
     case sellLand
     case feed
     case plant
+    case gameOver
 }
 
 struct GameView: View {
@@ -15,7 +16,7 @@ struct GameView: View {
     var body: some View {
         VStack {
             // MARK: Header status bar
-            if currentStep != .report {
+            if currentStep != .report && currentStep != .gameOver {
                 HStack {
                     ResourceCardView(title: "Pop", value: viewModel.population, systemImage: "person.3.fill")
                     ResourceCardView(title: "Bushels", value: viewModel.bushels, systemImage: "leaf.fill")
@@ -73,7 +74,7 @@ struct GameView: View {
                         onSubmit: { amount in
                             viewModel.feedPeople(amount: amount)
                             if viewModel.isGameOver {
-                                print("Game Over: Starvation!")
+                                advanceStep(to: .gameOver)
                             } else {
                                 advanceStep(to: .plant)
                             }
@@ -90,13 +91,20 @@ struct GameView: View {
                         onSubmit: { amount in
                             viewModel.plantSeedsAndEndYear(amount: amount)
                             if viewModel.isGameOver {
-                                print("Game Over: Time Limit")
+                                advanceStep(to: .gameOver)
                             } else {
                                 advanceStep(to: .report)
                             }
                         }
                     )
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    
+                case .gameOver:
+                    GameOverView(viewModel: viewModel) {
+                        // TODO: Save to SwiftData and navigate to Scoreboard
+                        print("Transitioning to Scoreboard...")
+                    }
+                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
                 }
             }
         }
@@ -156,6 +164,7 @@ struct GameView: View {
             currentStep = next
         }
     }
+    
 }
 
 // A small reusable component specifically for the report list

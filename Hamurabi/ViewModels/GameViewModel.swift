@@ -9,7 +9,7 @@ class GameViewModel {
     var acres = 1000
     var bushels = 2800
     
-    // MARK: Previous Year Report ("Hamurabi: I beg to report...")
+    // MARK: Previous Year Report
     var starved = 0
     var newcomers = 5
     var harvestPerAcre = 3
@@ -20,7 +20,10 @@ class GameViewModel {
     // MARK: Game Over State
     var isGameOver = false
     var gameOverReason = ""
+    var gameOverImage = ""
     var isVictory = false
+    
+    var totalStarvationPercentage: Double = 0.0
     
     // MARK: Constants
     let maxYears = 10
@@ -46,6 +49,7 @@ class GameViewModel {
         plagueDeaths = 0
         isGameOver = false
         isVictory = false
+        totalStarvationPercentage = 0.0
     }
     
     func processLandTransaction(amount: Int, isBuying: Bool) {
@@ -55,19 +59,26 @@ class GameViewModel {
     }
 
     func feedPeople(amount: Int) {
-        bushels -= amount
-        let peopleFed = amount / bushelsToFeedOnePerson
-        starved = max(0, population - peopleFed)
-        
-        if starved > 0 {
-            population -= starved
+            bushels -= amount
+            let peopleFed = amount / bushelsToFeedOnePerson
+            starved = max(0, population - peopleFed)
+            
+            if starved > 0 {
+                population -= starved
+            }
+            
+            let starvationRate = Double(starved) / Double(population + starved)
+            totalStarvationPercentage += starvationRate
+            
+            // Game Over (lose as The National Fink)
+            if starvationRate > minimumStarvationPercentage {
+                endGame(
+                    reason: "You starved \(starved) people in one year! Due to this extreme mismanagement, you have not only been impeached and thrown out of office, but you have also been declared a national fink.",
+                    image: "image_fink",
+                    victory: false
+                )
+            }
         }
-        
-        let starvationRate = Double(starved) / Double(population + starved)
-        if starvationRate > minimumStarvationPercentage {
-            endGame(reason: "You starved \(starved) people in one year! You heavy-handed bloodthirsty tyrant!", victory: false)
-        }
-    }
 
     func plantSeedsAndEndYear(amount: Int) {
         bushels -= amount
@@ -114,19 +125,39 @@ class GameViewModel {
         landPrice = Int.random(in: 17...26)
     }
     
-    private func endGame(reason: String, victory: Bool) {
-        isGameOver = true
-        gameOverReason = reason
-        isVictory = victory
-    }
+    private func endGame(reason: String, image: String, victory: Bool) {
+            isGameOver = true
+            gameOverReason = reason
+            gameOverImage = image
+            isVictory = victory
+        }
     
     private func calculateFinalScore() {
-        let acresPerPerson = population > 0 ? (acres / population) : 0
-        
-        if acresPerPerson < 10 {
-            endGame(reason: "Your performance was mediocre. People survived, but did not thrive. You are a lazy ruler.", victory: false)
-        } else {
-            endGame(reason: "A fantastic ruler! You have expanded the kingdom greatly like a true Hamurabi.", victory: true)
+            let averageStarvation = totalStarvationPercentage / Double(maxYears)
+            let acresPerPerson = population > 0 ? (acres / population) : 0
+            
+            // Game Over (win as Nero and Ivan IV)
+            if averageStarvation > 0.33 || acresPerPerson < 7 {
+                endGame(
+                    reason: "Your heavy-handed performance smacks of Nero and Ivan IV. The people (remaining) find you an unpleasant ruler, and, frankly, hate your guts!",
+                    image: "image_nero",
+                    victory: false
+                )
+            // Game Over (win as Trivial Problems)
+            } else if averageStarvation > 0.03 || acresPerPerson < 10 {
+                let assassins = Int.random(in: 1...15)
+                endGame(
+                    reason: "Your performance could have been somewhat better, but really wasn't too bad at all. \(assassins) people would dearly like to see you assassinated, but we all have our trivial problems.",
+                    image: "image_trivial",
+                    victory: true
+                )
+            // Game Over (win as Charlemagne)
+            } else {
+                endGame(
+                    reason: "A fantastic performance! Charlemagne, Disraeli, and Jefferson combined could not have done better!",
+                    image: "image_charlemagne",
+                    victory: true
+                )
+            }
         }
-    }
 }
