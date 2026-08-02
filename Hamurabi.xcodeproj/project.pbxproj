@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		E5BE9C2E301F57F1008720A2 /* hamurabi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hamurabi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5BE9C2E301F57F1008720A2 /* Hamurabi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hamurabi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		E5BE9C30301F57F1008720A2 /* hamurabi */ = {
+		E5BE9C30301F57F1008720A2 /* Hamurabi */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = hamurabi;
+			path = Hamurabi;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,7 +32,7 @@
 		E5BE9C25301F57F1008720A2 = {
 			isa = PBXGroup;
 			children = (
-				E5BE9C30301F57F1008720A2 /* hamurabi */,
+				E5BE9C30301F57F1008720A2 /* Hamurabi */,
 				E5BE9C2F301F57F1008720A2 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -40,7 +40,7 @@
 		E5BE9C2F301F57F1008720A2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E5BE9C2E301F57F1008720A2 /* hamurabi.app */,
+				E5BE9C2E301F57F1008720A2 /* Hamurabi.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,9 +48,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E5BE9C2D301F57F1008720A2 /* hamurabi */ = {
+		E5BE9C2D301F57F1008720A2 /* Hamurabi */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E5BE9C3B301F57F3008720A2 /* Build configuration list for PBXNativeTarget "hamurabi" */;
+			buildConfigurationList = E5BE9C3B301F57F3008720A2 /* Build configuration list for PBXNativeTarget "Hamurabi" */;
 			buildPhases = (
 				E5BE9C2A301F57F1008720A2 /* Sources */,
 				E5BE9C2B301F57F1008720A2 /* Frameworks */,
@@ -61,13 +61,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				E5BE9C30301F57F1008720A2 /* hamurabi */,
+				E5BE9C30301F57F1008720A2 /* Hamurabi */,
 			);
-			name = hamurabi;
+			name = Hamurabi;
 			packageProductDependencies = (
 			);
 			productName = hamurabi;
-			productReference = E5BE9C2E301F57F1008720A2 /* hamurabi.app */;
+			productReference = E5BE9C2E301F57F1008720A2 /* Hamurabi.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -85,7 +85,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E5BE9C29301F57F1008720A2 /* Build configuration list for PBXProject "hamurabi" */;
+			buildConfigurationList = E5BE9C29301F57F1008720A2 /* Build configuration list for PBXProject "Hamurabi" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -99,7 +99,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E5BE9C2D301F57F1008720A2 /* hamurabi */,
+				E5BE9C2D301F57F1008720A2 /* Hamurabi */,
 			);
 		};
 /* End PBXProject section */
@@ -313,7 +313,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E5BE9C29301F57F1008720A2 /* Build configuration list for PBXProject "hamurabi" */ = {
+		E5BE9C29301F57F1008720A2 /* Build configuration list for PBXProject "Hamurabi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E5BE9C39301F57F3008720A2 /* Debug */,
@@ -322,7 +322,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E5BE9C3B301F57F3008720A2 /* Build configuration list for PBXNativeTarget "hamurabi" */ = {
+		E5BE9C3B301F57F3008720A2 /* Build configuration list for PBXNativeTarget "Hamurabi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E5BE9C3C301F57F3008720A2 /* Debug */,

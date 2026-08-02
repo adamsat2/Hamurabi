@@ -1,18 +1,12 @@
-//
-//  hamurabiApp.swift
-//  hamurabi
-//
-//  Created by Adam Stern on 02/08/2026.
-//
-
 import SwiftUI
 import SwiftData
 
 @main
-struct hamurabiApp: App {
+struct HamurabiApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            GameRecord.self,
+            Achievement.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +19,7 @@ struct hamurabiApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
         }
         .modelContainer(sharedModelContainer)
     }
