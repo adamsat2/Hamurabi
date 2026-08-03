@@ -2,7 +2,8 @@ import Foundation
 import SwiftData
 
 @Model
-final class GameRecord {
+final class GameRecord: Identifiable {
+    @Attribute(.unique) var id: UUID
     var datePlayed: Date
     var yearsSurvived: Int
     var finalPopulation: Int
@@ -10,7 +11,8 @@ final class GameRecord {
     var finalBushels: Int
     var performanceRating: String
     
-    init(datePlayed: Date = .now, yearsSurvived: Int = 0, finalPopulation: Int = 0, finalAcres: Int = 0, finalBushels: Int = 0, performanceRating: String = "") {
+    init(id: UUID = UUID(), datePlayed: Date = .now, yearsSurvived: Int = 0, finalPopulation: Int = 0, finalAcres: Int = 0, finalBushels: Int = 0, performanceRating: String = "") {
+        self.id = id
         self.datePlayed = datePlayed
         self.yearsSurvived = yearsSurvived
         self.finalPopulation = finalPopulation

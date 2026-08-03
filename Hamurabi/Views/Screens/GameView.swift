@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 enum GameStep {
     case report
@@ -7,16 +8,22 @@ enum GameStep {
     case feed
     case plant
     case gameOver
+    case scoreboard
 }
 
 struct GameView: View {
+    // Database injection and view dismisser
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var viewModel = GameViewModel()
     @State private var currentStep: GameStep = .report
+    @State private var currentGameRecordID: UUID? = nil
     
     var body: some View {
         VStack {
             // MARK: Header status bar
-            if currentStep != .report && currentStep != .gameOver {
+            if currentStep != .report && currentStep != .gameOver && currentStep != .scoreboard {
                 HStack {
                     ResourceCardView(title: "Pop", value: viewModel.population, systemImage: "person.3.fill")
                     ResourceCardView(title: "Bushels", value: viewModel.bushels, systemImage: "leaf.fill")
@@ -101,13 +108,34 @@ struct GameView: View {
                     
                 case .gameOver:
                     GameOverView(viewModel: viewModel) {
-                        // TODO: Save to SwiftData and navigate to Scoreboard
-                        print("Transitioning to Scoreboard...")
+                        let newRecord = GameRecord(
+                            yearsSurvived: max(0, viewModel.year - 1), // i.e if player died in year 1, they survived 0 years.
+                            finalPopulation: viewModel.population,
+                            finalAcres: viewModel.acres,
+                            finalBushels: viewModel.bushels,
+                            performanceRating: viewModel.gameOverReason
+                        )
+                        
+                        modelContext.insert(newRecord)
+                        currentGameRecordID = newRecord.id
+                        
+                        advanceStep(to: .scoreboard)
                     }
                     .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
+                    
+                case .scoreboard:
+                    ScoreboardView(
+                        isFromGameOver: true,
+                        highlightedID: currentGameRecordID,
+                        onReturnHome: {
+                            dismiss()
+                        }
+                    )
+                    .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .opacity))
                 }
             }
         }
+        .navigationTitle(currentStep == .scoreboard ? "" : "Year \(viewModel.year)")
         .navigationTitle("Year \(viewModel.year)")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

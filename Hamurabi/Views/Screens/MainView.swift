@@ -31,10 +31,9 @@ struct MainView: View {
                             .disabled(true)
                     }
                     
-                    NavigationLink(destination: Text("Scoreboard Coming Soon")) {
-                        HamurabiButton(title: "Scoreboard", color: .secondary, action: {})
-                            .disabled(true)
-                    }
+                    NavigationLink(destination: ScoreboardView(isFromGameOver: false)) {
+                            HamurabiButton(title: "Scoreboard", action: {})
+                        }
                     
                     NavigationLink(destination: Text("Achievements Coming Soon")) {
                         HamurabiButton(title: "Achievements", color: .secondary, action: {})

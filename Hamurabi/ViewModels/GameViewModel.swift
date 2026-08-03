@@ -136,7 +136,7 @@ class GameViewModel {
             let averageStarvation = totalStarvationPercentage / Double(maxYears)
             let acresPerPerson = population > 0 ? (acres / population) : 0
             
-            // Game Over (win as Nero and Ivan IV)
+            // Game Over (lose as Nero and Ivan IV)
             if averageStarvation > 0.33 || acresPerPerson < 7 {
                 endGame(
                     reason: "Your heavy-handed performance smacks of Nero and Ivan IV. The people (remaining) find you an unpleasant ruler, and, frankly, hate your guts!",
