@@ -13,7 +13,7 @@ struct MainView: View {
                     Text("HAMURABI")
                         .font(.system(size: 48, weight: .black, design: .serif))
                         .foregroundColor(.orange)
-                        .tracking(5) // Some trick for aesthetics
+                        .tracking(5)
                     
                     Text("Ruler of Ancient Babylon")
                         .font(.headline)
@@ -37,10 +37,12 @@ struct MainView: View {
                     
                     NavigationLink(destination: ScoreboardView(isFromGameOver: false)) {
                             HamurabiButton(title: "Scoreboard", action: {})
+                            .disabled(true)
                         }
                     
-                    NavigationLink(destination: Text("Achievements Coming Soon")) {
-                        HamurabiButton(title: "Achievements", color: .secondary, action: {})
+                    NavigationLink(destination: AchievementsView()) {
+                        HamurabiButton(title: "Achievements", action: {})
+                            .disabled(true)
                     }
                 }
                 .padding(.horizontal, 40)
@@ -56,12 +58,9 @@ struct MainView: View {
     
     private func seedAchievementsIfEmpty() {
         if achievements.isEmpty {
-            print("Database empty: Seeding initial achievements...")
             for defaultAchievement in Achievement.defaults {
                 modelContext.insert(defaultAchievement)
             }
-        } else {
-            print("\(achievements.count) achievements found. Skipping seed.")
         }
     }
 }
