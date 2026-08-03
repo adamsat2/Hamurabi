@@ -164,7 +164,6 @@ struct GameView: View {
         .animation(.spring(response: 0.5, dampingFraction: 0.7), value: viewModel.currentToast)
     }
     
-    // MARK: Screens and navigation
     private var royalReportScreen: some View {
         VStack(spacing: 16) {
             Text("Hamurabi: I beg to report to you...")

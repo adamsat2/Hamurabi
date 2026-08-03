@@ -30,8 +30,8 @@ struct MainView: View {
                             .disabled(true) // Rely on NavigationLink's tap instead of the button's action
                     }
                     
-                    NavigationLink(destination: Text("Tutorial Screen Coming Soon")) {
-                        HamurabiButton(title: "How to Play", color: .secondary, action: {})
+                    NavigationLink(destination: TutorialView()) {
+                        HamurabiButton(title: "How to Play", action: {})
                             .disabled(true)
                     }
                     
