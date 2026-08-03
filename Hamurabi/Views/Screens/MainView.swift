@@ -1,6 +1,10 @@
 import SwiftUI
+import SwiftData
 
 struct MainView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var achievements: [Achievement]
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 40) {
@@ -37,7 +41,6 @@ struct MainView: View {
                     
                     NavigationLink(destination: Text("Achievements Coming Soon")) {
                         HamurabiButton(title: "Achievements", color: .secondary, action: {})
-                            .disabled(true)
                     }
                 }
                 .padding(.horizontal, 40)
@@ -45,6 +48,20 @@ struct MainView: View {
                 Spacer()
             }
             .background(Color(UIColor.systemBackground))
+        }
+        .onAppear {
+            seedAchievementsIfEmpty()
+        }
+    }
+    
+    private func seedAchievementsIfEmpty() {
+        if achievements.isEmpty {
+            print("Database empty: Seeding initial achievements...")
+            for defaultAchievement in Achievement.defaults {
+                modelContext.insert(defaultAchievement)
+            }
+        } else {
+            print("\(achievements.count) achievements found. Skipping seed.")
         }
     }
 }
