@@ -16,6 +16,9 @@ struct GameView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
+    @Query private var allAchievements: [Achievement]
+    @Query private var allRecords: [GameRecord]
+    
     @State private var viewModel = GameViewModel()
     @State private var currentStep: GameStep = .report
     @State private var currentGameRecordID: UUID? = nil
@@ -64,7 +67,7 @@ struct GameView: View {
                         text: "Since you bought no land, do you wish to sell any? Land is trading at \(viewModel.landPrice) bushels per acre.",
                         imageName: "image_land",
                         maxAmount: viewModel.acres,
-                        inputTitle: "Acres to SELL",
+                        inputTitle: "Acres to Sell",
                         onSubmit: { amount in
                             viewModel.processLandTransaction(amount: amount, isBuying: false)
                             advanceStep(to: .feed)
@@ -119,6 +122,19 @@ struct GameView: View {
                         modelContext.insert(newRecord)
                         currentGameRecordID = newRecord.id
                         
+                        let lockedAchievements = allAchievements.filter { !$0.isUnlocked }
+                        let newlyUnlocked = viewModel.evaluateAchievements(
+                            lockedAchievements: lockedAchievements,
+                            totalGamesPlayed: allRecords.count + 1 // Include the one just saved
+                        )
+                        
+                        // Save Unlocks to SwiftData and trigger toasts
+                        for achievement in newlyUnlocked {
+                            achievement.isUnlocked = true
+                            achievement.unlockedDate = .now
+                        }
+                        viewModel.displayToasts(for: newlyUnlocked)
+                        
                         advanceStep(to: .scoreboard)
                     }
                     .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .opacity))
@@ -136,12 +152,19 @@ struct GameView: View {
             }
         }
         .navigationTitle(currentStep == .scoreboard ? "" : "Year \(viewModel.year)")
-        .navigationTitle("Year \(viewModel.year)")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
+        // MARK: Toast overlay
+        .overlay(alignment: .top) {
+            if let toast = viewModel.currentToast {
+                AchievementToastView(achievement: toast)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
+        .animation(.spring(response: 0.5, dampingFraction: 0.7), value: viewModel.currentToast)
     }
     
-    // MARK: - Screens and navigation
+    // MARK: Screens and navigation
     private var royalReportScreen: some View {
         VStack(spacing: 16) {
             Text("Hamurabi: I beg to report to you...")
@@ -159,7 +182,7 @@ struct GameView: View {
                 ReportRow(icon: "person.crop.circle.badge.minus", text: "\(viewModel.starved) people starved")
                 
                 if viewModel.plagueDeaths > 0 {
-                    ReportRow(icon: "skull.fill", text: "The plague took the lives of \(viewModel.plagueDeaths) people", color: .red)
+                    ReportRow(icon: "person.fill.xmark", text: "The plague took the lives of \(viewModel.plagueDeaths) people", color: .red)
                 }
                 
                 ReportRow(icon: "person.crop.circle.badge.plus", text: "\(viewModel.newcomers) people came to the city")
@@ -168,7 +191,7 @@ struct GameView: View {
                 ReportRow(icon: "leaf.arrow.triangle.circlepath", text: "You harvested \(viewModel.harvestPerAcre) bushels per acre")
                 
                 if viewModel.ratsAte > 0 {
-                    ReportRow(icon: "pawprint.fill", text: "Rats ate \(viewModel.ratsAte) bushels", color: .red)
+                    ReportRow(icon: "exclamationmark.triangle.fill", text: "Rats ate \(viewModel.ratsAte) bushels", color: .red)
                 }
                 
                 ReportRow(icon: "leaf.fill", text: "You now have \(viewModel.bushels) bushels in store")
@@ -193,25 +216,6 @@ struct GameView: View {
         }
     }
     
-}
-
-// A small reusable component specifically for the report list
-struct ReportRow: View {
-    var icon: String
-    var text: String
-    var color: Color = .primary
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .foregroundColor(color == .primary ? .orange : color)
-                .frame(width: 24)
-            Text(text)
-                .foregroundColor(color)
-                .font(.subheadline)
-                .fontWeight(color == .primary ? .regular : .semibold)
-        }
-    }
 }
 
 #Preview {

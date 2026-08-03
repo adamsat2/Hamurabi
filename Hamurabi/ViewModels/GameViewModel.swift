@@ -8,6 +8,8 @@ class GameViewModel {
     var population = 100
     var acres = 1000
     var bushels = 2800
+    var survivedPlagueThisGame = false
+    var maxHarvestThisGame = 0
     
     // MARK: Previous Year Report
     var starved = 0
@@ -50,6 +52,8 @@ class GameViewModel {
         isGameOver = false
         isVictory = false
         totalStarvationPercentage = 0.0
+        survivedPlagueThisGame = false
+        maxHarvestThisGame = 0
     }
     
     func processLandTransaction(amount: Int, isBuying: Bool) {
@@ -98,9 +102,11 @@ class GameViewModel {
         } else {
             plagueDeaths = 0
         }
+        if plagueDeaths > 0 { survivedPlagueThisGame = true }
         
         // Harvest (1 to 5 bushels per acre)
         harvestPerAcre = Int.random(in: 1...5)
+        if harvestPerAcre > maxHarvestThisGame { maxHarvestThisGame = harvestPerAcre }
         let harvest = plantedAcres * harvestPerAcre
         bushels += harvest
         
@@ -133,31 +139,91 @@ class GameViewModel {
         }
     
     private func calculateFinalScore() {
-            let averageStarvation = totalStarvationPercentage / Double(maxYears)
-            let acresPerPerson = population > 0 ? (acres / population) : 0
+        let averageStarvation = totalStarvationPercentage / Double(maxYears)
+        let acresPerPerson = population > 0 ? (acres / population) : 0
+        
+        // Game Over (lose as Nero and Ivan IV)
+        if averageStarvation > 0.33 || acresPerPerson < 7 {
+            endGame(
+                reason: "Your heavy-handed performance smacks of Nero and Ivan IV. The people (remaining) find you an unpleasant ruler, and, frankly, hate your guts!",
+                image: "image_nero",
+                victory: false
+            )
+        // Game Over (win as Trivial Problems)
+        } else if averageStarvation > 0.03 || acresPerPerson < 10 {
+            let assassins = Int.random(in: 1...15)
+            endGame(
+                reason: "Your performance could have been somewhat better, but really wasn't too bad at all. \(assassins) people would dearly like to see you assassinated, but we all have our trivial problems.",
+                image: "image_trivial",
+                victory: true
+            )
+        // Game Over (win as Charlemagne)
+        } else {
+            endGame(
+                reason: "A fantastic performance! Charlemagne, Disraeli, and Jefferson combined could not have done better!",
+                image: "image_charlemagne",
+                victory: true
+            )
+        }
+    }
+    
+    // MARK: Achievements logic and toast notifications queue
+    var currentToast: Achievement? = nil
+    private var toastQueue: [Achievement] = []
+    
+    func evaluateAchievements(lockedAchievements: [Achievement], totalGamesPlayed: Int) -> [Achievement] {
+        var newlyUnlocked: [Achievement] = []
+        
+        for achievement in lockedAchievements {
+            var didUnlock = false
             
-            // Game Over (lose as Nero and Ivan IV)
-            if averageStarvation > 0.33 || acresPerPerson < 7 {
-                endGame(
-                    reason: "Your heavy-handed performance smacks of Nero and Ivan IV. The people (remaining) find you an unpleasant ruler, and, frankly, hate your guts!",
-                    image: "image_nero",
-                    victory: false
-                )
-            // Game Over (win as Trivial Problems)
-            } else if averageStarvation > 0.03 || acresPerPerson < 10 {
-                let assassins = Int.random(in: 1...15)
-                endGame(
-                    reason: "Your performance could have been somewhat better, but really wasn't too bad at all. \(assassins) people would dearly like to see you assassinated, but we all have our trivial problems.",
-                    image: "image_trivial",
-                    victory: true
-                )
-            // Game Over (win as Charlemagne)
-            } else {
-                endGame(
-                    reason: "A fantastic performance! Charlemagne, Disraeli, and Jefferson combined could not have done better!",
-                    image: "image_charlemagne",
-                    victory: true
-                )
+            switch achievement.id {
+            case "tragic_end": didUnlock = !isVictory
+            case "victorious_reign": didUnlock = isVictory
+            case "decade_power": didUnlock = (year > maxYears)
+            case "national_fink": didUnlock = gameOverReason.lowercased().contains("fink")
+            case "neros_shadow": didUnlock = gameOverReason.lowercased().contains("nero")
+            case "trivial_pursuits": didUnlock = gameOverReason.lowercased().contains("trivial")
+            case "charlemagne": didUnlock = gameOverReason.lowercased().contains("charlemagne")
+            case "seasoned_ruler": didUnlock = (totalGamesPlayed >= 10)
+            case "survivor": didUnlock = survivedPlagueThisGame
+            case "bountiful_harvest": didUnlock = (maxHarvestThisGame >= 5)
+            default: break
+            }
+            
+            if didUnlock {
+                newlyUnlocked.append(achievement)
             }
         }
+        return newlyUnlocked
+    }
+    
+    func displayToasts(for achievements: [Achievement]) {
+        toastQueue.append(contentsOf: achievements)
+        if currentToast == nil {
+            showNextToast()
+        }
+    }
+    
+    private func showNextToast() {
+        guard !toastQueue.isEmpty else {
+            currentToast = nil
+            return
+        }
+        
+        currentToast = toastQueue.removeFirst()
+        
+        // Dismiss the toast
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            self.dismissToast()
+        }
+    }
+    
+    private func dismissToast() {
+        currentToast = nil
+        // Wait for the slideup animation to finish and then show the next one
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.showNextToast()
+        }
+    }
 }
