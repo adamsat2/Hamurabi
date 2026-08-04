@@ -22,6 +22,7 @@ struct GameView: View {
     @State private var viewModel = GameViewModel()
     @State private var currentStep: GameStep = .report
     @State private var currentGameRecordID: UUID? = nil
+    @State private var showingQuitAlert = false
     
     var body: some View {
         VStack {
@@ -154,6 +155,33 @@ struct GameView: View {
         .navigationTitle(currentStep == .scoreboard ? "" : "Year \(viewModel.year)")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
+        
+        // MARK: Quit button
+        .toolbar {
+            if currentStep != .gameOver && currentStep != .scoreboard {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action:  {
+                        SoundManager.shared.playSound(name: "tap", ext: "mp3")
+                        SoundManager.shared.tapHaptic()
+                        showingQuitAlert = true
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.secondary)
+                            .font(.title2)
+                    }
+                }
+            }
+        }
+        .alert("Abandon Babylon?", isPresented: $showingQuitAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Surrender", role: .destructive) {
+                // If confirmed, dismiss GameView to pop back to MainMenu
+                dismiss()
+            }
+        } message: {
+            Text("Are you sure you want to surrender your rule? All the progress in this run will be lost.")
+        }
+        
         // MARK: Toast overlay
         .overlay(alignment: .top) {
             if let toast = viewModel.currentToast {
