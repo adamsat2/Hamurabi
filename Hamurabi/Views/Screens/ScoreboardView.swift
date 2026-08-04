@@ -81,10 +81,11 @@ struct ScoreboardView: View {
             
             // Only show this button if the player came directly from finishing a game
             if isFromGameOver {
-                HamurabiButton(title: "Return to Main Menu") {
+                HamurabiButton(title: "Return to Main Menu", color: .orange) {
                     onReturnHome?()
                 }
-                .padding()
+                .padding(.horizontal)
+                .padding(.bottom, 20)
             }
         }
         // Hide the standard back arrow if the player came from finishing a game

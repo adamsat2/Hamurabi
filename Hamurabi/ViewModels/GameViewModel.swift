@@ -136,6 +136,14 @@ class GameViewModel {
             gameOverReason = reason
             gameOverImage = image
             isVictory = victory
+        
+            if victory {
+                SoundManager.shared.playSound(name: "win", ext: "wav")
+                SoundManager.shared.successHaptic()
+            } else {
+                SoundManager.shared.playSound(name: "lose", ext: "mp3")
+                SoundManager.shared.errorHaptic()
+            }
         }
     
     private func calculateFinalScore() {
@@ -212,6 +220,9 @@ class GameViewModel {
         }
         
         currentToast = toastQueue.removeFirst()
+        
+        SoundManager.shared.playSound(name: "notification", ext: "mp3")
+        SoundManager.shared.successHaptic()
         
         // Dismiss the toast
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {

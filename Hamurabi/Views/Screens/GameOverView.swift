@@ -32,9 +32,10 @@ struct GameOverView: View {
                 
             Spacer()
             
-            HamurabiButton(title: "Continue to Scoreboard") {
+            HamurabiButton(title: "Continue to Scoreboard", color: .orange) {
                 onContinue()
             }
+            .padding(.bottom, 20)
         }
         .padding(.horizontal)
     }

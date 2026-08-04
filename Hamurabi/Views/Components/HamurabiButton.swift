@@ -6,7 +6,11 @@ struct HamurabiButton: View {
     var action: () -> Void
     
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            SoundManager.shared.playSound(name: "tap", ext: "mp3")
+            SoundManager.shared.tapHaptic()
+            action()
+        }) {
             Text(title)
                 .font(.headline)
                 .fontWeight(.semibold)

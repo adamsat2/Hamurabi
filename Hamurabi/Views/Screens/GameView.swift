@@ -202,9 +202,10 @@ struct GameView: View {
             
             Spacer()
             
-            HamurabiButton(title: "Issue Edicts") {
+            HamurabiButton(title: "Issue Edicts", color: .orange) {
                 advanceStep(to: .buyLand)
             }
+            .padding(.bottom, 20)
         }
         .padding(.horizontal)
     }

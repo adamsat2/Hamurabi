@@ -1,12 +1,21 @@
 import SwiftUI
 import SwiftData
 
+enum AppRoute: Hashable {
+    case game
+    case tutorial
+    case scoreboard
+    case achievements
+}
+
 struct MainView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var achievements: [Achievement]
     
+    @State private var navPath = NavigationPath()
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navPath) {
             VStack(spacing: 40) {
                 // Title
                 VStack {
@@ -25,24 +34,20 @@ struct MainView: View {
                 
                 // Navigation Buttons
                 VStack(spacing: 20) {
-                    NavigationLink(destination: GameView()) {
-                        HamurabiButton(title: "Play", action: {})
-                            .disabled(true) // Rely on NavigationLink's tap instead of the button's action
+                    HamurabiButton(title: "Play", color: .orange) {
+                        navPath.append(AppRoute.game)
                     }
                     
-                    NavigationLink(destination: TutorialView()) {
-                        HamurabiButton(title: "How to Play", action: {})
-                            .disabled(true)
+                    HamurabiButton(title: "How to Play", color: .secondary) {
+                        navPath.append(AppRoute.tutorial)
                     }
                     
-                    NavigationLink(destination: ScoreboardView(isFromGameOver: false)) {
-                            HamurabiButton(title: "Scoreboard", action: {})
-                            .disabled(true)
-                        }
+                    HamurabiButton(title: "Scoreboard", color: .secondary) {
+                        navPath.append(AppRoute.scoreboard)
+                    }
                     
-                    NavigationLink(destination: AchievementsView()) {
-                        HamurabiButton(title: "Achievements", action: {})
-                            .disabled(true)
+                    HamurabiButton(title: "Achievements", color: .secondary) {
+                        navPath.append(AppRoute.achievements)
                     }
                 }
                 .padding(.horizontal, 40)
@@ -50,6 +55,19 @@ struct MainView: View {
                 Spacer()
             }
             .background(Color(UIColor.systemBackground))
+            // Load the correct screen
+            .navigationDestination(for: AppRoute.self) { route in
+                switch route {
+                case .game:
+                    GameView()
+                case .tutorial:
+                    TutorialView()
+                case .scoreboard:
+                    ScoreboardView(isFromGameOver: false)
+                case .achievements:
+                    AchievementsView()
+                }
+            }
         }
         .onAppear {
             seedAchievementsIfEmpty()

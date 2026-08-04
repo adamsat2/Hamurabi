@@ -88,11 +88,11 @@ struct TutorialView: View {
                 
                 // Main button
                 if currentPage == pages.count - 1 {
-                    HamurabiButton(title: "Finish Tutorial") {
+                    HamurabiButton(title: "Finish Tutorial", color: .orange) {
                         dismiss()
                     }
                 } else {
-                    HamurabiButton(title: "Next") {
+                    HamurabiButton(title: "Next", color: .orange) {
                         withAnimation { currentPage += 1 }
                     }
                 }
