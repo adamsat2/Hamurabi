@@ -31,6 +31,7 @@ struct MainView: View {
                 .padding(.top, 60)
                 
                 Spacer()
+                Spacer()
                 
                 // Navigation Buttons
                 VStack(spacing: 20) {
@@ -52,7 +53,18 @@ struct MainView: View {
                 }
                 .padding(.horizontal, 40)
                 
+                VStack(spacing: 4) {
+                    Text("Based on the original 1968 game by Doug Dyment")
+                    Text("and the 1973 BASIC port by David Ahl")
+                }
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundColor(.secondary)
+                .padding(.top, 10)
+                .padding(.bottom, 20)
+                
                 Spacer()
+                
             }
             .background(Color(UIColor.systemBackground))
             // Load the correct screen
