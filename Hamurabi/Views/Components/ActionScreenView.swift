@@ -38,6 +38,11 @@ struct ActionScreenView: View {
                 .font(.title2)
                 .padding(.horizontal, 40)
             
+            Text("Leave blank for 0")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.top, -16)
+            
             Spacer()
             
             HamurabiButton(title: "Confirm Edict", color: .orange) {
