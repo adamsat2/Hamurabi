@@ -20,7 +20,7 @@ struct TutorialView: View {
         
         TutorialPage(id: 2, title: "Feeding the City", description: "Your people need food to survive. It takes exactly 20 bushels of grain to feed one person for a year.", imageName: "image_feed", warningText: "WARNING: If you starve more than 45% of your population in a single year, you will be instantly impeached!"),
         
-        TutorialPage(id: 3, title: "The Harvest", description: "Every year you must plant seeds for the future. You need 1 bushel of seed per acre of land. Harvests are unpredictable—you might yield anywhere from 1 to 5 bushels per acre.", imageName: "image_plant", warningText: nil),
+        TutorialPage(id: 3, title: "The Harvest", description: "Every year you must plant seeds for the future. You need 1 bushel of seed per acre of land. Harvests are unpredictable - you might yield anywhere from 1 to 5 bushels per acre.", imageName: "image_plant", warningText: nil),
         
         TutorialPage(id: 4, title: "The Dangers", description: "Nature is unforgiving. Watch out for rat infestations that can eat massive portions of your grain, and the dreaded plague that can wipe out half your city in an instant. Good luck!", imageName: "image_fink", warningText: nil)
     ]
