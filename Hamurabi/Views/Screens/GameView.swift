@@ -7,6 +7,7 @@ enum GameStep {
     case sellLand
     case feed
     case plant
+    case transition
     case gameOver
     case scoreboard
 }
@@ -23,11 +24,12 @@ struct GameView: View {
     @State private var currentStep: GameStep = .report
     @State private var currentGameRecordID: UUID? = nil
     @State private var showingQuitAlert = false
+    @State private var pendingPlantAmount: Int = 0
     
     var body: some View {
         VStack {
             // MARK: Header status bar
-            if currentStep != .report && currentStep != .gameOver && currentStep != .scoreboard {
+            if currentStep != .report && currentStep != .gameOver && currentStep != .scoreboard && currentStep != .transition {
                 HStack {
                     ResourceCardView(title: "Pop", value: viewModel.population, systemImage: "person.3.fill")
                     ResourceCardView(title: "Bushels", value: viewModel.bushels, systemImage: "leaf.fill")
@@ -100,14 +102,22 @@ struct GameView: View {
                         maxAmount: min(viewModel.acres, viewModel.population * 10, viewModel.bushels),
                         inputTitle: "Acres to plant",
                         onSubmit: { amount in
-                            viewModel.plantSeedsAndEndYear(amount: amount)
-                            if viewModel.isGameOver {
-                                advanceStep(to: .gameOver)
-                            } else {
-                                advanceStep(to: .report)
-                            }
+                            pendingPlantAmount = amount
+                            advanceStep(to: .transition)
                         }
                     )
+                    .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    
+                case .transition:
+                    TransitionView {
+                        viewModel.plantSeedsAndEndYear(amount: pendingPlantAmount)
+                        
+                        if viewModel.isGameOver {
+                            advanceStep(to: .gameOver)
+                        } else {
+                            advanceStep(to: .report)
+                        }
+                    }
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
                     
                 case .gameOver:
