@@ -75,18 +75,6 @@ struct TutorialView: View {
             
             // Navigation buttons
             HStack(spacing: 16) {
-                // Back button (hidden on the first page)
-                if currentPage > 0 {
-                    Button(action: {
-                        withAnimation { currentPage -= 1 }
-                    }) {
-                        Image(systemName: "chevron.left.circle.fill")
-                            .font(.system(size: 44))
-                            .foregroundColor(.gray)
-                    }
-                }
-                
-                // Main button
                 if currentPage == pages.count - 1 {
                     HamurabiButton(title: "Finish Tutorial", color: .orange) {
                         dismiss()

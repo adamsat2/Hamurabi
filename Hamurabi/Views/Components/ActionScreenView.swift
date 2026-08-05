@@ -15,14 +15,17 @@ struct ActionScreenView: View {
             Text(text)
                 .font(.headline)
                 .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
             
             Image(imageName)
                 .resizable()
                 .scaledToFit()
-                .frame(height: 200)
+                .frame(height: isFocused ? 0 : 200)
                 .background(Color(UIColor.systemGray5))
                 .cornerRadius(12)
+                .opacity(isFocused ? 0 : 1)
+                .frame(maxWidth: .infinity, alignment: .center)
                 .padding(.horizontal)
                 .accessibilityHidden(true) // VoiceOver (screen reader) doesn't need to write the name of the images.
             
@@ -31,12 +34,26 @@ struct ActionScreenView: View {
                 .foregroundColor(.secondary)
             
             TextField(inputTitle, text: $inputText)
-                .keyboardType(.numberPad) // Forces the number keyboard
+                .keyboardType(.numberPad) // Opens the number keyboard
                 .focused($isFocused)
                 .textFieldStyle(.roundedBorder)
                 .multilineTextAlignment(.center)
                 .font(.title2)
                 .padding(.horizontal, 40)
+                .onChange(of: inputText) { _, newValue in
+                    var filtered = newValue.filter { $0.isNumber }
+                    while filtered.hasPrefix("0") && filtered.count > 1 {
+                        filtered.removeFirst()
+                    }
+                    
+                    if let intValue = Int(filtered), intValue > maxAmount {
+                        filtered = String(maxAmount)
+                    }
+                    
+                    if inputText != filtered {
+                        inputText = filtered
+                    }
+                }
             
             Text("Leave blank for 0")
                 .font(.caption)
@@ -47,6 +64,7 @@ struct ActionScreenView: View {
             
             HamurabiButton(title: "Confirm Edict", color: .orange) {
                 isFocused = false
+                
                 let parsedAmount = Int(inputText) ?? 0 // Type check input
                 let safeAmount = min(max(parsedAmount, 0), maxAmount) // Number limit check [0, maxAmount]
                 
@@ -57,9 +75,12 @@ struct ActionScreenView: View {
             .padding(.bottom, 20)
         }
         .padding(.top)
-        .onAppear {
-            isFocused = true // Enter the keyboard when appearing to avoid needless tap
+        // Can click on the empty space to dismiss the number keyboard
+        .contentShape(Rectangle())
+        .onTapGesture {
+            isFocused = false
         }
+        .animation(.easeInOut(duration: 0.3), value: isFocused)
     }
 }
 
