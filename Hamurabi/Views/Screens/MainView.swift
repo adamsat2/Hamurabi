@@ -39,15 +39,15 @@ struct MainView: View {
                         navPath.append(AppRoute.game)
                     }
                     
-                    HamurabiButton(title: "How to Play", color: .secondary) {
+                    HamurabiButton(title: "How to Play", color: .orange) {
                         navPath.append(AppRoute.tutorial)
                     }
                     
-                    HamurabiButton(title: "Scoreboard", color: .secondary) {
+                    HamurabiButton(title: "Scoreboard", color: .orange) {
                         navPath.append(AppRoute.scoreboard)
                     }
                     
-                    HamurabiButton(title: "Achievements", color: .secondary) {
+                    HamurabiButton(title: "Achievements", color: .orange) {
                         navPath.append(AppRoute.achievements)
                     }
                 }

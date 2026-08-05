@@ -204,6 +204,7 @@ struct GameView: View {
                 .frame(height: 200)
                 .background(Color(UIColor.systemGray5))
                 .cornerRadius(12)
+                .accessibilityHidden(true) // VoiceOver (screen reader) doesn't need to write the name of the images.
             
             VStack(alignment: .leading, spacing: 10) {
                 ReportRow(icon: "person.crop.circle.badge.minus", text: "\(viewModel.starved) people starved")

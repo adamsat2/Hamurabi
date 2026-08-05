@@ -29,6 +29,8 @@ struct ResourceCardView: View {
         .padding(.horizontal, 4)
         .background(Color(UIColor.secondarySystemBackground))
         .cornerRadius(12)
+        .accessibilityElement(children: .ignore) // Disable the default VoiceOver sentence
+        .accessibilityLabel("\(title) \(value)") // Custom sentence for VoiceOver to read
     }
 }
 

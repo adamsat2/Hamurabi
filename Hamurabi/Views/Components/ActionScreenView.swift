@@ -24,6 +24,7 @@ struct ActionScreenView: View {
                 .background(Color(UIColor.systemGray5))
                 .cornerRadius(12)
                 .padding(.horizontal)
+                .accessibilityHidden(true) // VoiceOver (screen reader) doesn't need to write the name of the images.
             
             Text("Max available: \(maxAmount)")
                 .font(.subheadline)

@@ -13,6 +13,7 @@ struct GameOverView: View {
                 .background(Color(UIColor.systemGray5))
                 .cornerRadius(12)
                 .padding(.top, 40)
+                .accessibilityHidden(true) // VoiceOver (screen reader) doesn't need to write the name of the images.
             
             VStack(alignment: .leading, spacing: 16) {
                 Text(viewModel.gameOverReason)
