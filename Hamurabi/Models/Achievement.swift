@@ -30,7 +30,7 @@ extension Achievement {
         Achievement(id: "decade_power", title: "A Decade of Power", details: "Survive all 10 years of your rule.", systemImageName: "hourglass.bottomhalf.filled", colorName: "blue"),
         Achievement(id: "national_fink", title: "The National Fink", details: "Starve over 45% of your population in a single year.", systemImageName: "person.crop.circle.badge.xmark", colorName: "red"),
         Achievement(id: "neros_shadow", title: "Nero's Shadow", details: "Survive 10 years, but be hated by your remaining people.", systemImageName: "figure.mind.and.body", colorName: "purple"),
-        Achievement(id: "trivial_pursuits", title: "Trivial Pursuits", details: "Survive 10 years with a mediocre score.", systemImageName: "questionmark.circle.fill", colorName: "gray"),
+        Achievement(id: "trivial_pursuits", title: "Trivial Pursuits", details: "Survive 10 years with a mediocre score.", systemImageName: "questionmark.circle.fill", colorName: "mint"),
         Achievement(id: "charlemagne", title: "The New Charlemagne", details: "Achieve a perfect 10-year score.", systemImageName: "building.columns.fill", colorName: "orange"),
         Achievement(id: "seasoned_ruler", title: "Seasoned Ruler", details: "Complete 10 total games of Hamurabi.", systemImageName: "scroll.fill", colorName: "brown"),
         Achievement(id: "survivor", title: "Survivor", details: "Survive a plague without a Game Over in the same year.", systemImageName: "shield.lefthalf.filled", colorName: "green"),

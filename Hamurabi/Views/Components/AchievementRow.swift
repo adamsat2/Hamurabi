@@ -13,6 +13,7 @@ struct AchievementRow: View {
         case "gray": return .gray
         case "brown": return .brown
         case "green": return .green
+        case "mint": return .mint
         default: return .accentColor
         }
     }
@@ -60,7 +61,7 @@ struct AchievementRow: View {
 }
 
 #Preview("Locked Example") {
-    let unlockedDummyAchievement = Achievement(id: "test", title: "The New Charlemagne", details: "Achieve a perfect 10-year score.", systemImageName: "building.columns.fill", colorName: "orange", isUnlocked: true)
+    let unlockedDummyAchievement = Achievement(id: "test", title: "The New Charlemagne", details: "Achieve a perfect 10-year score.", systemImageName: "building.columns.fill", colorName: "mint", isUnlocked: true)
     let lockedDummyAchievement = Achievement(id: "test2", title: "A Decade of Power", details: "Survive all 10 years of your rule.", systemImageName: "hourglass.bottomhalf.filled", colorName: "blue", isUnlocked: false)
     
     return Group(){
